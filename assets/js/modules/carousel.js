@@ -56,18 +56,27 @@ const carousel = (options = null)=>{
         if(!carousel) return console.log("Error carousel not exist");
         if(!carousel_action) return console.log("Error carousel action not exist: carousel must have an action trigger");
         if(!carousel.dataset.currentslide) return console.log('Error: the current slide dataset must be defined in carousel');    
-        const sliding = (action, type = "button")=>{
-            let current_slide = carousel.dataset.currentslide;
-            if((action == 1 || action == -1) && type == "button"){
-                current_slide = parseInt(current_slide) + action
+        const sliding = (slide_number, type = "button")=>{
+            slide_number = parseInt(slide_number);
+            let current_slide = parseInt(carousel.dataset.currentslide);
+            let translate_slide;
+            if(type == "button"){
+                current_slide += slide_number;
+                translate_slide = slide_number == 1 ? translate_next_slide: 
+                                    slide_number == -1 ? translate_prev_slide:
+                                    null;
+            }
+            if(type == "number"){
+                translate_slide = slide_number > current_slide ? translate_next_slide: 
+                                slide_number < current_slide ? translate_prev_slide:
+                                null;
+                current_slide = slide_number;
+            }  
                 if(current_slide <= last_slide && current_slide >= first_slide){
                     carousel.dataset.currentslide = current_slide;
-                    const translate_slide = action == 1 ? translate_next_slide: 
-                                            action == -1 ? translate_prev_slide:
-                                            null;
                     for(let i =0; i < itemslen; ++i){
                         if(items[i].dataset.slide == current_slide){
-                            items[i].classList.remove(hide, translate_slide);             
+                            items[i].classList.remove(hide, translate_next_slide, translate_prev_slide);             
                             items[i].classList.add(show, translate_slide);             
                         }else{
                             items[i].classList.remove(show, translate_next_slide, translate_prev_slide);             
@@ -75,35 +84,8 @@ const carousel = (options = null)=>{
                         } 
                     }
                 }
-            }else if(type == "number"){
-                const slide_number = parseInt(action);
-                let current_slide = carousel.dataset.currentslide;
-                if(slide_number >= first_slide && slide_number <= last_slide){
-                    carousel.dataset.currentslide = slide_number;
-                    if(slide_number < current_slide){
-                        for(let i =0; i < itemslen; ++i){
-                            if(items[i].dataset.slide == slide_number){
-                                items[i].classList.remove(hide, translate_next_slide);             
-                                items[i].classList.add(show, translate_prev_slide);              
-                            }else{
-                                items[i].classList.remove(show, translate_next_slide, translate_prev_slide);             
-                                items[i].classList.add(hide);           
-                            } 
-                        }
-                    }else if(slide_number > current_slide){
-                        for(let i =0; i < itemslen; ++i){
-                            if(items[i].dataset.slide == slide_number){
-                                items[i].classList.remove(hide);             
-                                items[i].classList.add(show, translate_next_slide);             
-                            }else{
-                                items[i].classList.remove(show, translate_next_slide, translate_prev_slide);             
-                                items[i].classList.add(hide);             
-                            } 
-                        }
-                    }
-                }
-            }
         }
+        
         for(let index = 0; index < carousel_action.length;++index){
             carousel_action[index].addEventListener('click', ()=>{
                 const action = carousel_action[index].dataset.action;
