@@ -1,17 +1,17 @@
-.carousel_wrap {
+#c, .carousel_wrap {
     margin: 0 auto;
     width: 50%;
 }
-.carousel_wrap .carousel_actions_wrap {
+#c .carousel_actions_wrap, .carousel_wrap .carousel_actions_wrap {
     margin: 0 auto;
     width: 50%;
     text-align: center;
 }
-.carousel_wrap .carousel {
+#c .carousel, .carousel_wrap .carousel {
     display: flex;
     gap: 8px;
 }
-.carousel_wrap .carousel img {
+#c .carousel img, .carousel_wrap .carousel img {
     width: 100%;
     height: 400px;
 }
